@@ -1,0 +1,37 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+$primary: #EF4649;
+$secondary: #FEDCC1;
+
+:root {
+    --primary: #{$primary};
+    --secondary: #{$secondary};
+    --navbar-bg: #212121;
+    --text-light: #fafafa;
+    --text-primary: #{$primary};
+}
+
+.btn {
+    outline: none;
+    border: none;
+    appearance: none;
+    padding: 0.5rem;
+    border-radius: 3px;
+    &-primary {
+        background-color: $primary;
+    }
+}

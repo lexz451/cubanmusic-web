@@ -1,0 +1,25 @@
+{
+  "name": "cubanmusic-web",
+  "version": "0.0.1",
+  "description": "Public website for AM.PM CubanMusic project",
+  "repository": "https://github.com/lexz451/cubanmusic-web.git",
+  "author": "A.R.Z <lexz.zaldivar@gmail.com>",
+  "license": "MIT",
+  "source": "src/index.html",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "start": "parcel serve",
+    "build": "parcel build"
+  },
+  "devDependencies": {
+    "@parcel/compressor-gzip": "^2.0.1",
+    "@parcel/transformer-sass": "^2.0.1",
+    "@parcel/transformer-vue": "^2.0.1",
+    "parcel": "^2.0.1"
+  },
+  "dependencies": {
+    "@parcel/service-worker": "^2.0.1",
+    "vue": "^3.2.22",
+    "vue-router": "4"
+  }
+}
