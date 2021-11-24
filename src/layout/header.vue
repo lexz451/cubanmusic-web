@@ -1,10 +1,10 @@
 <template>
   <header>
-      <a href="/" class="brand">cubanmusic<strong>.INFO</strong></a>
+      <router-link to="/" class="brand">|cubanmusic<em>.info</em>|</router-link>
       <nav class="navbar" role="navigation">
-        <router-link to="/">Artistas</router-link>
-        <router-link to="/">Instituciones</router-link>
-        <router-link to="/">Venues</router-link>
+        <router-link to="/x">Quiénes Somos</router-link>
+        <router-link to="/y">Explorar</router-link>
+        <router-link to="/z">Búsqueda</router-link>
       </nav>
   </header>
 </template>
@@ -20,7 +20,7 @@ export default {
     width: 100%;
     display: flex;
     align-items: center;
-    height: 84px;
+    height: 75px;
     padding-left: 2rem;
     padding-right: 2rem;
     background-color: var(--navbar-bg);
@@ -29,12 +29,16 @@ export default {
     .brand {
       flex-grow: 1;
       font-size: 32px;
+      font-weight: 700;
       color: var(--text-light);
+      em {
+        color: var(--primary);
+      }
     }
     .navbar {
       a {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
         color: var(--text-light);
         &.router-link-active {
           color: var(--text-primary);
