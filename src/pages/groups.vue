@@ -1,13 +1,13 @@
 <template>
-  <div class="artist-page">
+  <div class="groups-page">
     <search></search>
     <div class="divider"></div>
-    <div class="artist-list">
-      <artist-item
-        v-for="item in artists"
+    <div class="group-list">
+      <group-item
+        v-for="item in groups"
         :key="item.id"
-        :artist="item"
-      ></artist-item>
+        :group="item"
+      ></group-item>
     </div>
   </div>
 </template>
@@ -16,34 +16,34 @@
 import { ref } from '@vue/reactivity';
 import { fetchList } from '../data';
 
-import ArtistItem from '../components/artist_item.vue';
+import GroupItem from '../components/group_item.vue';
 import AppInput from '../components/input.vue';
 import Search from '../components/search.vue';
 
 export default {
   components: {
-    ArtistItem,
+    GroupItem,
     AppInput,
     Search
   },
   async setup() {
-    const artists = ref([]);
+    const groups = ref([]);
     const fetchData = async () => {
-      const res = await fetchList('/artists');
+      const res = await fetchList('/groups');
       if (res) {
-        artists.value = res;
+        groups.value = res;
       }
     };
     await fetchData();
     return {
-      artists
+      groups
     };
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.artist-page {
+.groups-page {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -51,7 +51,7 @@ export default {
   align-items: stretch;
   padding: 2rem;
   position: relative;
-  .artist-list {
+  .group-list {
 	  padding: 2rem;
 	  display: flex;
 	  align-items: center;
@@ -59,7 +59,6 @@ export default {
 	  justify-content: space-evenly;
 	  *{
 		  width: 25%;
-		  padding: 1rem;
 	  }
   }
 }

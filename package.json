@@ -25,6 +25,10 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
+    "@vueuse/components": "^7.1.1",
+    "@vueuse/core": "^7.1.1",
+    "@vueuse/integrations": "^7.1.1",
+    "nprogress": "^0.2.0",
     "vue": "^3.2.22",
     "vue-router": "4",
     "vue3-carousel": "^0.1.30"

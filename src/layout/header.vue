@@ -1,10 +1,10 @@
 <template>
   <header>
-      <router-link to="/" class="brand">|cubanmusic<em>.info</em>|</router-link>
+      <router-link :to="{name: 'home'}" class="brand">|cubanmusic<em>.info</em>|</router-link>
       <nav class="navbar" role="navigation">
-        <router-link to="/x">Quiénes Somos</router-link>
-        <router-link to="/y">Explorar</router-link>
-        <router-link to="/z">Búsqueda</router-link>
+        <router-link to="/">Quiénes Somos</router-link>
+        <router-link to="/">Explorar</router-link>
+        <router-link to="/">Búsqueda</router-link>
       </nav>
   </header>
 </template>
@@ -28,7 +28,7 @@ export default {
     line-height: 1;
     .brand {
       flex-grow: 1;
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 700;
       color: var(--text-light);
       em {
