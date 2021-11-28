@@ -1,16 +1,31 @@
 <template>
   <div class="layout">
     <app-header></app-header>
+    <app-search></app-search>
     <main>
-      <router-view v-slot="{Component}">
-        <suspense timeout="0" @resolve="onResolve()" @fallback="onFallback()">
-          <component :is="Component"/>
-          <template #fallback>
-            <div class="loading-container">
-              <h3>Cargando contenido...</h3>
-            </div>
-          </template>
-        </suspense>
+      <router-view :key="$route.fullPath" v-slot="{ Component }">
+        <template v-if="Component">
+          <suspense
+              timeout="0"
+              @resolve="onComponentResolve()"
+              @fallback="onComponentLoading()"
+            >
+              <component :is="Component"></component>
+              <template #fallback>
+                <loading
+                  :is-full-page="false"
+                  :active="isLoading"
+                  :width="30"
+                  :height="30"
+                  color="#ef4649"
+                >
+                  <template #after>
+                    <span class="vld-text">Cargando...</span>
+                  </template>
+                </loading>
+              </template>
+            </suspense>
+        </template>
       </router-view>
     </main>
     <app-footer></app-footer>
@@ -20,55 +35,59 @@
 <script>
 import AppHeader from './layout/header.vue';
 import AppFooter from './layout/footer.vue';
-import Home from './pages/home.vue';
-import NProgress from 'nprogress';
-import { useRouter } from 'vue-router';
-import { onErrorCaptured, onUpdated } from '@vue/runtime-core';
+import AppSearch from './layout/search.vue';
+import Loading, { useLoading } from 'vue3-loading-overlay';
+import { onMounted, ref } from 'vue';
+
+import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
 
 export default {
   components: {
     AppHeader,
     AppFooter,
-    Home
+    AppSearch,
+    Loading
   },
   setup() {
-    NProgress.configure({ showSpinner: false });
-    NProgress.configure({ easing: 'ease', speed: 500 });
-    NProgress.configure({ trickleRate: 0.03, trickleSpeed: 800 });
-    NProgress.configure({ minimum: 0.3 });
-    
-    const onFallback = () => {
-      NProgress.start();
-    }
+    const isLoading = ref(false);
 
-    const onResolve = () => {
-      NProgress.done();
-    }
+    const onComponentResolve = () => {
+      isLoading.value = false;
+    };
+
+    const onComponentLoading = () => {
+      isLoading.value = true;
+    };
 
     return {
-      onResolve,
-      onFallback
-    }
+      isLoading,
+      onComponentLoading,
+      onComponentResolve
+    };
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   main {
+    position: relative;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-  }
-  .loading-container {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    .vld-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--primary);
+      .vld-text {
+        margin-top: 0.5rem;
+      }
+    }
   }
 }
 </style>

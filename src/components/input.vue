@@ -1,5 +1,7 @@
 <template>
-  <input class="form-control" :placeholder="placeholder" :readonly="readonly"  v-model="value" />
+  <div class="form-control">
+    <input :type="type" :placeholder="placeholder" :readonly="readonly"  v-model="value" @keyup.enter="onEnter()" />
+  </div>
 </template>
 
 <script>
@@ -9,22 +11,35 @@ export default {
   props: {
     placeholder: String,
     readonly: Boolean,
-    modelValue: String
+    type: String,
+    modelValue: String,
+    icon: String
   },
   setup(props, { emit }) {
+    const value = useModelValue(props, emit, 'modelValue');
+    const onEnter = () => emit('enter', value);
     return {
-      value: useModelValue(props, emit, 'modelValue')
+      value,
+      onEnter
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-input {
+.form-control {
   background: var(--secondary);
-  padding: 0.8rem 1rem;
-  border: none;
-  outline: none;
   border-radius: 3px;
+  display: flex;
+  align-items: center;
+  max-width: 600px;
+
+  input {
+    padding: 0.8rem 1rem;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    flex-grow: 1;
+  }
 }
 </style>

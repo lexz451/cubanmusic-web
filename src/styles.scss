@@ -57,10 +57,6 @@ a {
   clear: both;
 }
 
-section:not(.carousel) {
-  padding-bottom: 2rem;
-}
-
 .flex {
   display: flex;
 }
@@ -183,9 +179,12 @@ section:not(.carousel) {
   padding: 1rem;
   border-radius: 5px;
   color: rgba($dark, 0.7);
-  &-no-data {
-    svg {
-      margin-right: 0.5rem;
-    }
+  font-size: 14px;
+  svg {
+    margin-right: 0.5rem;
+  }
+  &-error {
+    background-color: rgba($primary, 0.1);
+    color: $primary;
   }
 }

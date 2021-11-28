@@ -1,66 +1,70 @@
 <template>
   <div class="home-page container">
-    <search></search>
-    <div class="divider"></div>
-    <section class="artists">
-      <div class="flex flex-align-center">
-        <h2 class="flex-grow-1">Artistas Individuales</h2>
-        <router-link to="/artists">Explorar Categoría</router-link>
-      </div>
-      <Carousel :settings="settings" :breakpoints="breakpoints">
-        <Slide v-for="artist in artists" :key="artist.id">
-          <artist-item :artist="artist"></artist-item>
-        </Slide>
-        <template #addons>
-          <Navigation />
-        </template>
-      </Carousel>
-    </section>
-    <div class="divider"></div>
-    <section class="groups">
-      <div class="flex flex-align-center">
-        <h2 class="flex-grow-1">Grupos</h2>
-        <router-link to="/groups">Explorar Categoría</router-link>
-      </div>
-      <Carousel :settings="settings" :breakpoints="breakpoints">
-        <Slide v-for="group in groups" :key="group.id">
-          <group-item :group="group"></group-item>
-        </Slide>
-        <template #addons>
-          <Navigation />
-        </template>
-      </Carousel>
-    </section>
-    <div class="divider"></div>
-    <section class="venues">
-      <div class="flex flex-align-center">
-        <h2 class="flex-grow-1">Venues</h2>
-        <router-link to="/">Explorar Categoría</router-link>
-      </div>
-      <Carousel :settings="settings" :breakpoints="breakpoints">
-        <Slide v-for="venue in venues" :key="venue.id">
-          <venue-item :venue="venue"></venue-item>
-        </Slide>
-        <template #addons>
-          <Navigation />
-        </template>
-      </Carousel>
-    </section>
-    <div class="divider"></div>
-    <section class="organizations">
-      <div class="flex flex-align-center">
-        <h2 class="flex-grow-1">Instituciones</h2>
-        <router-link to="/">Explorar Categoría</router-link>
-      </div>
-      <Carousel :settings="settings" :breakpoints="breakpoints">
-        <Slide v-for="org in orgs" :key="org.id">
-          <org-item :org="org"></org-item>
-        </Slide>
-        <template #addons>
-          <Navigation />
-        </template>
-      </Carousel>
-    </section>
+    <div class="alert alert-error" v-if="error">
+      <i class="fas fa-exclamation"></i>
+      <span>{{ error }}</span>
+    </div>
+    <template v-if="!error">
+      <section class="artists">
+        <div class="flex flex-align-center">
+          <h2 class="flex-grow-1">Artistas Individuales</h2>
+          <router-link to="/artists">Explorar Categoría</router-link>
+        </div>
+        <Carousel :settings="settings" :breakpoints="breakpoints">
+          <Slide v-for="artist in artists" :key="artist.id">
+            <artist-item :artist="artist"></artist-item>
+          </Slide>
+          <template #addons>
+            <Navigation />
+          </template>
+        </Carousel>
+      </section>
+      <div class="divider"></div>
+      <section class="groups">
+        <div class="flex flex-align-center">
+          <h2 class="flex-grow-1">Grupos</h2>
+          <router-link to="/groups">Explorar Categoría</router-link>
+        </div>
+        <Carousel :settings="settings" :breakpoints="breakpoints">
+          <Slide v-for="group in groups" :key="group.id">
+            <group-item :group="group"></group-item>
+          </Slide>
+          <template #addons>
+            <Navigation />
+          </template>
+        </Carousel>
+      </section>
+      <div class="divider"></div>
+      <section class="venues">
+        <div class="flex flex-align-center">
+          <h2 class="flex-grow-1">Venues</h2>
+          <router-link to="/">Explorar Categoría</router-link>
+        </div>
+        <Carousel :settings="settings" :breakpoints="breakpoints">
+          <Slide v-for="venue in venues" :key="venue.id">
+            <venue-item :venue="venue"></venue-item>
+          </Slide>
+          <template #addons>
+            <Navigation />
+          </template>
+        </Carousel>
+      </section>
+      <div class="divider"></div>
+      <section class="organizations">
+        <div class="flex flex-align-center">
+          <h2 class="flex-grow-1">Instituciones</h2>
+          <router-link to="/">Explorar Categoría</router-link>
+        </div>
+        <Carousel :settings="settings" :breakpoints="breakpoints">
+          <Slide v-for="org in orgs" :key="org.id">
+            <org-item :org="org"></org-item>
+          </Slide>
+          <template #addons>
+            <Navigation />
+          </template>
+        </Carousel>
+      </section>
+    </template>
   </div>
 </template>
 
@@ -69,16 +73,14 @@ import AppSelect from '../components/select.vue';
 import AppInput from '../components/input.vue';
 
 import 'vue3-carousel/dist/carousel.css';
-import { Carousel, Navigation, Slide, Pagination } from 'vue3-carousel';
-import { ref } from '@vue/reactivity';
-import { fetchList } from '../data';
+import { Carousel, Navigation, Slide } from 'vue3-carousel';
 
 import ArtistItem from '../components/artist_item.vue';
 import GroupItem from '../components/group_item.vue';
 import VenueItem from '../components/venue_item.vue';
 import OrgItem from '../components/org_item.vue';
-import Search from '../components/search.vue';
-import { useFetchCache } from '../componsable/useFetch';
+import { useFetchCache } from '../componsable/useApi';
+import { ref } from '@vue/runtime-core';
 
 export default {
   components: {
@@ -87,12 +89,10 @@ export default {
     Carousel,
     Navigation,
     Slide,
-    Pagination,
     ArtistItem,
     GroupItem,
     VenueItem,
-    OrgItem,
-    Search
+    OrgItem
   },
   data() {
     return {
@@ -118,33 +118,26 @@ export default {
     };
   },
   async setup() {
-    /*const artists = ref([]);
+    const artists = ref([]);
     const groups = ref([]);
     const venues = ref([]);
     const orgs = ref([]);
+    
     const error = ref(null);
 
-    async function fetchData() {
-      try {
-        const res = await Promise.all([
-          fetchList("/artists"), 
-          fetchList("/groups"),
-          fetchList("/venues"),
-          fetchList("/orgs")
-        ]);
-        if (res && res.length) {
-          artists.value = res[0];
-          groups.value = res[1];
-          venues.value = res[2];
-          orgs.value = res[3];
-        }
-      } catch (err) {
-        error.value = err;
-        console.error(err);
-      }
+    try {
+      const _artists = await useFetchCache('/artists');
+      const _groups = await useFetchCache('/groups');
+      const _venues = await useFetchCache('/venues');
+      const _orgs = await useFetchCache('/orgs');
+      
+      artists.value = _artists.data.value;
+      groups.value = _groups.data.value;
+      venues.value = _venues.data.value;
+      orgs.value = _orgs.data.value;
+    } catch (e) {
+      error.value = e;
     }
-
-    await fetchData();
 
     return {
       artists,
@@ -152,24 +145,7 @@ export default {
       venues,
       orgs,
       error
-    };*/
-
-    const artists = ref([]);
-    const groups = ref([]);
-    const venues = ref([]);
-    const orgs = ref([]);
-
-    const { data } = useFetchCache("artists", "/artists");
-
-    console.log(data);
-
-    return {
-      artists,
-      groups,
-      venues,
-      orgs,
-    }
-
+    };
   }
 };
 </script>
@@ -190,7 +166,7 @@ export default {
   }
   .carousel {
     padding-left: 2rem;
-      padding-right: 2rem;
+    padding-right: 2rem;
   }
 }
 </style>

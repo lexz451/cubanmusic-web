@@ -1,6 +1,5 @@
 <template>
   <div class="groups-page">
-    <search></search>
     <div class="divider"></div>
     <div class="group-list">
       <group-item
@@ -18,7 +17,6 @@ import { fetchList } from '../data';
 
 import GroupItem from '../components/group_item.vue';
 import AppInput from '../components/input.vue';
-import Search from '../components/search.vue';
 
 export default {
   components: {

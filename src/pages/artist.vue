@@ -1,7 +1,5 @@
 <template>
   <div class="artist-container container">
-    <search></search>
-    <div class="divider"></div>
     <section class="artist-details">
       <div class="artist-details--left">
         <img class="artist-image" :src="artistImage" />
@@ -129,7 +127,7 @@ import ArticleItem from '../components/article_item.vue';
 
 import { capitalize } from '@vue/shared';
 import { Carousel, Navigation, Slide } from 'vue3-carousel';
-import Search from '../components/search.vue';
+import { useFetchCache } from '../componsable/useApi';
 
 export default {
   props: ['id'],
@@ -140,8 +138,7 @@ export default {
     ArticleItem,
     Carousel,
     Navigation,
-    Slide,
-    Search
+    Slide
   },
   data() {
     return {
@@ -181,24 +178,16 @@ export default {
 
     const error = ref(null);
 
-    async function fetchData(id) {
-      try {
-        const res = await fetchById("/artists", id);
-        if (res) {
-          artist.value = res;
-        }
-      } catch (err) {
-        error.value = err;
-      }
-    }
-
     if (props.id) {
-      await fetchData(props.id);
+      try {
+        const _artist = await useFetchCache('/artists/' + props.id);
+        artist.value = _artist.data.value;
+      } catch (e) {
+        error.value = e;
+      }
     } else {
       console.error('No id!');
     }
-
-    before
 
     return {
       artist,
@@ -229,7 +218,6 @@ export default {
     margin-bottom: 0.5rem;
   }
 
-  
   .artist-details {
     display: flex;
     &--right {

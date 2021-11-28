@@ -1,7 +1,5 @@
 <template>
   <div class="artist-page">
-    <search></search>
-    <div class="divider"></div>
     <div class="artist-list">
       <artist-item
         v-for="item in artists"
@@ -18,25 +16,25 @@ import { fetchList } from '../data';
 
 import ArtistItem from '../components/artist_item.vue';
 import AppInput from '../components/input.vue';
-import Search from '../components/search.vue';
+import { useFetchCache } from '../componsable/useApi';
 
 export default {
   components: {
     ArtistItem,
     AppInput,
-    Search
   },
   async setup() {
     const artists = ref([]);
-    const fetchData = async () => {
-      const res = await fetchList('/artists');
-      if (res) {
-        artists.value = res;
-      }
-    };
-    await fetchData();
+    const error = ref(null);
+    try {
+      const _artists = await useFetchCache("/artists");
+      artists.value = _artists.data.value;
+    } catch (e) {
+      error.value = e;
+    }
     return {
-      artists
+      artists,
+      error
     };
   }
 };
