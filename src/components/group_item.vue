@@ -9,6 +9,7 @@
 
 <script>
 import { computed } from '@vue/reactivity';
+import { decodeBase64Image } from '../utils';
 export default {
   props: ['group'],
   setup(props) {
