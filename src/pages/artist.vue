@@ -103,14 +103,6 @@
         <h3 class="flex-grow-1">Artistas Relacionados</h3>
         <router-link to="/">Explorar Categoría</router-link>
       </div>
-      <Carousel :settings="settings" :breakpoints="breakpoints">
-        <Slide v-for="album in artist.albums" :key="album.id">
-          <album-item :album="album"></album-item>
-        </Slide>
-        <template #addons>
-          <Navigation />
-        </template>
-      </Carousel>
     </section>
   </div>
 </template>

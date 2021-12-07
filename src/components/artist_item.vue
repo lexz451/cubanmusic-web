@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'artist', params: { id: artist.id } }" class="artist_item">
+  <router-link v-if="artist.id" :to="{ name: 'artist', params: { id: artist?.id } }" class="artist_item">
     <img
       class="artist_item__image"
       :src="artistImage"

@@ -5,7 +5,7 @@
     >
     <div class="search-results-content">
       <template v-for="item in results" :key="item.id + item.name">
-        <div v-if="item.type == 'Person'" class="artist-item">
+        <router-link :to="{ name: 'artist', params: { id: item.id } }" v-if="item.type == 'Person'" class="artist-item">
           <img :src="item.image" />
           <div class="artist-info">
             <h3>{{ item.name }}</h3>
@@ -17,7 +17,7 @@
             </span>
             <small class="occupation">{{ item.data?.job_title }}</small>
           </div>
-        </div>
+        </router-link>
         <div v-if="item.type == 'Group'" class="group-item">
           <img :src="item.image" />
           <div class="group-info">
@@ -93,13 +93,14 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding-left: 4rem;
-  padding-right: 4rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   padding-bottom: 2rem;
 
   &-label {
     color: rgba($color: #000000, $alpha: 0.6);
     margin-top: 0.5rem;
+    margin-left: 2rem;
   }
 
   &-content {
@@ -110,6 +111,7 @@ export default {
     width: 60%;
     .artist-item {
       display: flex;
+      flex-wrap: wrap;
       overflow: hidden;
       margin-bottom: 1rem;
       margin-top: 1rem;
@@ -119,9 +121,9 @@ export default {
         border-radius: 50%;
         object-fit: cover;
         object-position: center;
+        margin-right: 1rem
       }
       .artist-info {
-        margin-left: 3rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
