@@ -24,8 +24,7 @@ jobs:
         with:
           variableNames: NODE_ENV,API_URL
       - name: Build
-        run: yarn install
-        run: yarn build
+        run: yarn install && yarn build
       - name: Deploy
         uses: appleboy/scp-action@master
         with:
