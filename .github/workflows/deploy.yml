@@ -16,13 +16,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           cache: "yarn"
-      - name: Create .env
-        uses: fmunirdev/envvar-to-dotenv-action@v0.1.0
         env:
-          NODE_ENV: "production"
-          API_URL: "https://api.cubanmusic.info/api/v1/public"
-        with:
-          variableNames: NODE_ENV,API_URL
+          API_URL: "https://api.cubanmusic.info/api/v1/public"  
       - name: Build
         run: yarn install && yarn build
       - name: Deploy
