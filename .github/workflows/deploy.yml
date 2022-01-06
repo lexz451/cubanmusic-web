@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    pull_request: false
+    workflows_dispatch: true
+jobs:
+  deploy:
+    defaults:
+      run:
+        shell: bash
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          cache: "yarn"
+      - run: yarn install
+      - run: yarn build
+      - name: Deploy
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          passphrase: ${{ secrets.SSH_KEY_PASS }}
+          key: ${{ secrets.SSH_KEY }}
+          strip_components: 1
+          source: "dist/*"
+          target: "www/cubanmusic.info/public_html"
+          rm: true
