@@ -10,6 +10,7 @@
 
 <script>
 import { computed } from '@vue/reactivity';
+import { decodeBase64Image } from '../utils';
 export default {
   props: ['venue'],
   setup(props) {
@@ -18,9 +19,10 @@ export default {
         '../assets/images/default-image.jpg',
         import.meta.url
       );
-      return props.venue?.image || fallbackImage;
+      return props.venue?.imageFile ?
+        decodeBase64Image(props.venue.imageFile.filedata, props.venue.imageFile.filetype)
+        : fallbackImage;
     });
-
     return {
       venueImage
     };
@@ -49,10 +51,11 @@ export default {
     align-items: center;
     justify-content: center;
     &_name {
-        color: var(--text-primary);
+        color: var(--bs-primary);
     }
     &_type {
         margin-top: 0.5rem;
+        color: var(--bs-dark);
     }
   }
 }

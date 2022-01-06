@@ -1,31 +1,22 @@
-const API_URL = 'http://localhost:8080/api/v1/public';
+import axios from "axios";
+import { cacheAdapterEnhancer, retryAdapterEnhancer } from "axios-extensions";
+import { inject } from "vue";
 
-export async function fetchList(path) {
-  const res = await fetch(API_URL + path, {
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  if (!res.ok) {
-    const error = new Error(res.statusText);
-    error.json = await res.json();
-    throw error;
-  }
-  return await res.json();
-}
+const AxiosInstace = axios.create({
+  baseURL: process.env.API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  adapter: retryAdapterEnhancer(cacheAdapterEnhancer(axios.defaults.adapter))
+});
 
-export async function fetchById(path, id) {
-  const res = await fetch(API_URL + path + '/' + id, {
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  if (!res.ok) {
-    const error = new Error(res.statusText);
-    error.json = await res.json();
-    throw error;
+export const fetch = async (url, config = {}) => {
+  //const Logger = inject('vue3-logger');
+  try {
+    const response = await AxiosInstace.get(url, config);
+    return response.data;
+  } catch (e) { 
+    //Logger.error(e);
+    throw e;
   }
-  return await res.json();
 }

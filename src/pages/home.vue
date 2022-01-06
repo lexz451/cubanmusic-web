@@ -1,16 +1,19 @@
 <template>
-  <div class="home-page container">
+  <div class="home-page container-lg">
     <div class="alert alert-error" v-if="error">
       <i class="fas fa-exclamation"></i>
       <span>{{ error }}</span>
     </div>
     <template v-if="!error">
       <section class="artists">
-        <div class="flex flex-align-center">
-          <h2 class="flex-grow-1">Artistas Individuales</h2>
+        <div class="d-flex align-items-center mb-2">
+          <h3 class="flex-grow-1 fw-bold">Artistas Individuales</h3>
           <router-link to="/artists">Explorar Categoría</router-link>
         </div>
-        <Carousel :settings="settings" :breakpoints="breakpoints">
+        <Carousel
+          :settings="carouselConfig.settings"
+          :breakpoints="carouselConfig.breakpoints"
+        >
           <Slide v-for="artist in artists" :key="artist.id">
             <artist-item :artist="artist"></artist-item>
           </Slide>
@@ -19,13 +22,16 @@
           </template>
         </Carousel>
       </section>
-      <div class="divider"></div>
-      <section class="groups">
-        <div class="flex flex-align-center">
-          <h2 class="flex-grow-1">Grupos</h2>
+      <div class="divider my-4"></div>
+      <section class="groups ">
+        <div class="d-flex align-items-center mb-2">
+          <h3 class="flex-grow-1 fw-bold">Grupos</h3>
           <router-link to="/groups">Explorar Categoría</router-link>
         </div>
-        <Carousel :settings="settings" :breakpoints="breakpoints">
+        <Carousel
+          :settings="carouselConfig.settings"
+          :breakpoints="carouselConfig.breakpoints"
+        >
           <Slide v-for="group in groups" :key="group.id">
             <group-item :group="group"></group-item>
           </Slide>
@@ -34,13 +40,16 @@
           </template>
         </Carousel>
       </section>
-      <div class="divider"></div>
+      <div class="divider my-4"></div>
       <section class="venues">
-        <div class="flex flex-align-center">
-          <h2 class="flex-grow-1">Venues</h2>
+        <div class="d-flex align-items-center mb-2">
+          <h3 class="flex-grow-1 fw-bold">Venues</h3>
           <router-link to="/">Explorar Categoría</router-link>
         </div>
-        <Carousel :settings="settings" :breakpoints="breakpoints">
+        <Carousel
+          :settings="carouselConfig.settings"
+          :breakpoints="carouselConfig.breakpoints"
+        >
           <Slide v-for="venue in venues" :key="venue.id">
             <venue-item :venue="venue"></venue-item>
           </Slide>
@@ -49,13 +58,16 @@
           </template>
         </Carousel>
       </section>
-      <div class="divider"></div>
+      <div class="divider my-4"></div>
       <section class="organizations">
-        <div class="flex flex-align-center">
-          <h2 class="flex-grow-1">Instituciones</h2>
+        <div class="d-flex align-items-center mb-2">
+          <h3 class="flex-grow-1 fw-bold">Instituciones</h3>
           <router-link to="/">Explorar Categoría</router-link>
         </div>
-        <Carousel :settings="settings" :breakpoints="breakpoints">
+        <Carousel
+          :settings="carouselConfig.settings"
+          :breakpoints="carouselConfig.breakpoints"
+        >
           <Slide v-for="org in orgs" :key="org.id">
             <org-item :org="org"></org-item>
           </Slide>
@@ -72,15 +84,40 @@
 import AppSelect from '../components/select.vue';
 import AppInput from '../components/input.vue';
 
-import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Navigation, Slide } from 'vue3-carousel';
+import 'vue3-carousel/dist/carousel.css';
 
 import ArtistItem from '../components/artist_item.vue';
 import GroupItem from '../components/group_item.vue';
 import VenueItem from '../components/venue_item.vue';
 import OrgItem from '../components/org_item.vue';
-import { useFetchCache } from '../componsable/useApi';
-import { ref } from '@vue/runtime-core';
+import { ref } from 'vue-demi';
+import { fetch } from '../data';
+
+const carouselConfig = {
+  settings: {
+    itemsToShow: 1,
+    snapAlign: 'center'
+  },
+  breakpoints: {
+    576: {
+      itemsToShow: 2,
+      snapAlign: 'center'
+    },
+    768: {
+      itemsToShow: 3,
+      snapAlign: 'center'
+    },
+    992: {
+      itemsToShow: 3,
+      snapAlign: 'center'
+    },
+    1200: {
+      itemsToShow: 4,
+      snapAlign: 'center'
+    }
+  }
+};
 
 export default {
   components: {
@@ -96,25 +133,7 @@ export default {
   },
   data() {
     return {
-      settings: {
-        itemsToShow: 1,
-        snapAlign: 'center'
-      },
-      breakpoints: {
-        // 700px and up
-        700: {
-          itemsToShow: 3,
-          snapAlign: 'center'
-        },
-        1024: {
-          itemsToShow: 4
-        },
-        // 1024 and up
-        1280: {
-          itemsToShow: 5,
-          snapAlign: 'center'
-        }
-      }
+      carouselConfig
     };
   },
   async setup() {
@@ -122,20 +141,21 @@ export default {
     const groups = ref([]);
     const venues = ref([]);
     const orgs = ref([]);
-    
     const error = ref(null);
 
     try {
-      const _artists = await useFetchCache('/artists');
-      const _groups = await useFetchCache('/groups');
-      const _venues = await useFetchCache('/venues');
-      const _orgs = await useFetchCache('/orgs');
-      
-      artists.value = _artists.data.value;
-      groups.value = _groups.data.value;
-      venues.value = _venues.data.value;
-      orgs.value = _orgs.data.value;
+      const data = await Promise.all([
+        fetch('/persons'),
+        fetch('/groups'),
+        fetch('/venues'),
+        fetch('/organizations')
+      ]);
+      artists.value = data[0];
+      groups.value = data[1];
+      venues.value = data[2];
+      orgs.value = data[3];
     } catch (e) {
+      console.error(e);
       error.value = e;
     }
 
@@ -158,15 +178,10 @@ export default {
   padding: 2rem;
   position: relative;
   flex: 1 0 auto;
-  .artists {
-    .carousel {
-      background-color: var(--surface);
-      border-radius: 10px;
-    }
-  }
-  .carousel {
-    padding-left: 2rem;
-    padding-right: 2rem;
+  .artists .carousel {
+    background-color: var(--surface);
+    border-radius: 0.35rem;
+    padding: 1rem;
   }
 }
 </style>

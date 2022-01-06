@@ -18,26 +18,24 @@
 <script>
 import AppInput from '../components/input.vue';
 
-import { ref, watch } from '@vue/runtime-core';
-import { useDebounce } from '@vueuse/core';
-import { useSearch } from '../componsable/useApi';
-import Loading from 'vue3-loading-overlay';
-import { useRouter } from 'vue-router';
+import { ref } from '@vue/runtime-core';
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
   name: 'app-search',
   components: {
-    AppInput,
-    Loading
+    AppInput
   },
   setup() {
     const query = ref('');
     const router = useRouter();
+    const { query: queryParams } = useRoute();
+    if (queryParams.query) {
+      query.value = queryParams.query;
+    }
     const doSearch = () => {
       if (query.value) {
-        router.push({ name: 'search', params: { query: query.value  } })
-      } else {
-        // noop
+        router.push({ name: 'search', query: { query: query.value } });
       }
     };
     return { query, doSearch };

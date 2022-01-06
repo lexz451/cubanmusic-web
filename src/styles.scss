@@ -4,34 +4,27 @@ $light: #fafafa;
 $surface: #f1f1f1;
 $dark: #212121;
 
+$font-family-base: 'Inter', sans-serif;
+
 :root {
-  --primary: #{$primary};
-  --secondary: #{$secondary};
-  --navbar-bg: #212121;
-  --text-light: #fafafa;
-  --text-primary: #{$primary};
-  --dark: #{$dark};
-  --light: #{$light};
+  --vc-nav-background-color: #{$primary};
   --surface: #{$surface};
 }
 
-*,
-*::after,
-*::before {
-  box-sizing: border-box;
-}
+@import '../node_modules/bootstrap/scss/functions';
+@import '../node_modules/bootstrap/scss/variables';
+@import '../node_modules/bootstrap/scss/mixins';
+@import '../node_modules/bootstrap/scss/root';
+@import '../node_modules/bootstrap/scss/utilities';
+@import '../node_modules/bootstrap/scss/reboot';
+@import '../node_modules/bootstrap/scss/type';
+@import '../node_modules/bootstrap/scss/images';
+@import '../node_modules/bootstrap/scss/containers';
+@import '../node_modules/bootstrap/scss/grid';
+@import '../node_modules/bootstrap/scss/helpers';
+@import '../node_modules/bootstrap/scss/utilities/api';
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-size: 1rem;
-  font-family: 'Inter', sans-serif;
-  color: $dark;
-}
+@import './styles/nprogress.scss';
 
 a {
   text-decoration: none;
@@ -50,128 +43,11 @@ a {
   }
 }
 
-// TODO
-.container {
-  width: 100%;
-  margin: auto;
-  clear: both;
-}
-
-.flex {
-  display: flex;
-}
-
-.flex-align-center {
-  align-items: center;
-}
-
-.flex-grow-1 {
-  flex-grow: 1;
-}
-
 .divider {
   width: 100%;
   height: 2px;
   border-radius: 1px;
   background-color: $surface;
-}
-
-// Carousel
-.carousel {
-  padding: 0.5rem;
-}
-.carousel__item {
-  min-height: 200px;
-  width: 200px;
-  font-size: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: $surface;
-}
-.carousel__slide {
-  padding: 10px;
-}
-.carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid $light;
-  background-color: $primary;
-}
-
-
-/* Make clicks pass-through */
-#nprogress {
-  pointer-events: none;
-}
-
-#nprogress .bar {
-  background: $primary;
-
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-}
-
-/* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px $primary, 0 0 5px $primary;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
-}
-
-/* Remove these to get rid of the spinner */
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 15px;
-  right: 15px;
-}
-
-#nprogress .spinner-icon {
-  width: 18px;
-  height: 18px;
-  box-sizing: border-box;
-
-  border: solid 2px transparent;
-  border-top-color: $primary;
-  border-left-color: $primary;
-  border-radius: 50%;
-
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-          animation: nprogress-spinner 400ms linear infinite;
-}
-
-.nprogress-custom-parent {
-  overflow: hidden;
-  position: relative;
-}
-
-.nprogress-custom-parent #nprogress .spinner,
-.nprogress-custom-parent #nprogress .bar {
-  position: absolute;
-}
-
-@-webkit-keyframes nprogress-spinner {
-  0%   { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes nprogress-spinner {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 .alert {
@@ -188,3 +64,18 @@ a {
     color: $primary;
   }
 }
+
+.carousel {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+.carousel__prev,
+.carousel__next {
+  //box-shadow: 0 0 1px 1px #0000000a;
+  width: 30px;
+  height: 30px;
+}
+.carousel__item {
+  margin-right: 0.5rem;
+}
+

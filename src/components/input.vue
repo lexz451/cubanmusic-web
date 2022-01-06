@@ -28,12 +28,11 @@ export default {
 
 <style lang="scss" scoped>
 .form-control {
-  background: var(--secondary);
+  background: var(--bs-secondary);
   border-radius: 3px;
   display: flex;
   align-items: center;
   max-width: 600px;
-
   input {
     padding: 0.8rem 1rem;
     background-color: transparent;

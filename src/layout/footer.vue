@@ -44,7 +44,7 @@ export default {
 
 <style lang="scss" scoped>
 footer {
-  background-color: var(--dark);
+  background-color: var(--bs-dark);
 }
 .footer-divider {
   width: 80%;
@@ -57,13 +57,13 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--light);
+  color: var(--bs-light);
   border-radius: 1px;
   font-weight: 300;
   font-size: 14px;
 }
 .footer-container {
-  color: var(--light);
+  color: var(--bs-light);
   display: flex;
   align-items: flex-start;
   justify-content: space-evenly;
@@ -72,7 +72,7 @@ footer {
   .footer-brand {
     font-size: 22px;
     em {
-      color: var(--primary);
+      color: var(--bs-primary);
     }
   }
   .footer-title {
@@ -90,12 +90,12 @@ footer {
     flex-direction: column;
     a {
       margin-bottom: 0.5rem;
-      color: var(--light);
+      color: var(--bs-light);
       font-size: 14px;
       transition: color 0.05s;
       &:hover,
       &:focus {
-        color: var(--primary);
+        color: var(--bs-primary);
       }
     }
   }

@@ -12,14 +12,14 @@ import { computed } from '@vue/reactivity';
 import { decodeBase64Image } from '../utils';
 export default {
   props: ['group'],
-  setup(props) {
+  setup({group}) {
     const groupImage = computed(() => {
       const fallbackImage = new URL(
         '../assets/images/default-image.jpg',
         import.meta.url
       );
-      return props.group.image
-        ? decodeBase64Image(props.group.image.data, props.group.image.type)
+      return group.imageFile
+        ? decodeBase64Image(group.imageFile.filedata, group.imageFile.filetype)
         : fallbackImage;
     });
     return {
@@ -44,11 +44,11 @@ export default {
     }
     &--info {
         height: 20%;
-        background-color: var(--primary);
+        background-color: var(--bs-primary);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--text-light);
+        color: var(--bs-light);
     }
 }
 </style>

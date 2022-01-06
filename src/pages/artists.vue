@@ -12,11 +12,10 @@
 
 <script>
 import { ref } from '@vue/reactivity';
-import { fetchList } from '../data';
+import { fetch } from '../data';
 
 import ArtistItem from '../components/artist_item.vue';
 import AppInput from '../components/input.vue';
-import { useFetchCache } from '../componsable/useApi';
 
 export default {
   components: {
@@ -27,8 +26,8 @@ export default {
     const artists = ref([]);
     const error = ref(null);
     try {
-      const _artists = await useFetchCache("/artists");
-      artists.value = _artists.data.value;
+      const data = await fetch("/persons");
+      artists.value = data;
     } catch (e) {
       error.value = e;
     }

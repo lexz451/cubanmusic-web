@@ -11,7 +11,7 @@ const routes = [
     { path: '/artists', name: "artists", component: Artists },
     { path: '/groups', name: 'groups', component: Groups },
     { path: '/artist/:id', name: 'artist', component: Artist, props: true },
-    { path: '/search/:query', name: 'search', component: Search, props: true}
+    { path: '/search', name: 'search', component: Search}
 ];
 
 const router = createRouter({

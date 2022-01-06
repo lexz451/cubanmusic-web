@@ -1,43 +1,53 @@
 <template>
-  <div class="artist-container container">
-    <section class="artist-details">
-      <div class="artist-details--left">
-        <img class="artist-image" :src="artistImage" />
-        <span class="artist-roles">{{ artistRoles }}</span>
-        <div class="divider"></div>
-        <small
-          >Nacimiento: <strong>{{ artist.birthDate }}</strong></small
+  <div class="artist-container py-5 container-lg">
+    <section class="artist-details row">
+      <div class="col-lg-4 pe-4">
+        <div
+          class="d-flex flex-column align-items-center justify-content-center"
         >
-        <small
-          >Nacionalidad: <strong>{{ artist.nationality || '-' }}</strong></small
-        >
-        <small
-          >Residencia Actual: <strong>{{ artist.residence }}</strong></small
-        >
-        <small
-          >Años en activo: <strong>{{ artist.yearsActive }}</strong></small
-        >
-        <small
-          >Instrumentos: <strong v-text="artist.instruments.join(', ')"></strong
-        ></small>
-        <small
-          >Géneros: <strong v-text="artist.genres.join(', ')"></strong
-        ></small>
-        <small>Centro de Estudios: <strong>-</strong></small>
-        <div class="divider"></div>
-        <small
-          >ISNI: <strong>{{ artist.isni }}</strong></small
-        >
-        <small>IPI Code: <strong>-</strong></small>
-        <small
-          >Web:
-          <strong
-            ><a :href="artist.website" target="_blank">{{
-              artist.website
-            }}</a></strong
-          ></small
-        >
-        <div class="artist-social">
+          <img class="artist-image img-thumbnail" :src="artistImage" />
+          <span class="artist-roles text-primary mt-4">{{
+            artist.jobRoles.join(', ')
+          }}</span>
+        </div>
+
+        <div class="divider my-4"></div>
+        <div class="d-flex flex-column">
+          <small class="mb-1"
+            >Nacimiento: <strong>{{ artist.birthDate || '-' }}</strong></small
+          >
+          <small class="mb-1"
+            >Nacionalidad:
+            <strong>{{ artist.nationality || '-' }}</strong></small
+          >
+          <small class="mb-1"
+            >Residencia Actual: <strong>{{ artist.residencePlace?.name || '-' }}</strong></small
+          >
+          <small class="mb-1"
+            >Años en activo: <strong>{{ (artist.activeSince || '-')  + ' / ' + (artist.activeUntil || '-') }}</strong></small
+          >
+          <small class="mb-1"
+            >Instrumentos: <strong v-text="artistInst?.join(', ') || '-'"></strong
+          ></small>
+          <small class="mb-1"
+            >Géneros: <strong v-text="artistGenres?.join(', ') || '-'"></strong
+          ></small>
+          <small class="mb-1">Centro de Estudios: <strong>-</strong></small>
+          <div class="divider my-4"></div>
+          <small class="mb-1"
+            >ISNI: <strong>{{ artist.isniCode }}</strong></small
+          >
+          <small class="mb-1">IPI Code: <strong>-</strong></small>
+          <small class="mb-1"
+            >Web:
+            <strong
+              ><a :href="artist.website" target="_blank">{{
+                artist.website
+              }}</a></strong
+            ></small
+          >
+        </div>
+        <div class="artist-social d-flex flex-wrap justify-content-around my-4">
           <i class="fab fa-spotify fa-2x"></i>
           <i class="fab fa-youtube fa-2x"></i>
           <i class="fab fa-itunes fa-2x"></i>
@@ -48,13 +58,22 @@
           <i class="fab fa-instagram fa-2x"></i>
         </div>
       </div>
-      <div class="artist-details--right">
-        <h1 class="artist-name">{{ artist.name }}</h1>
-        <span class="artist-occupation">{{ artist.occupation }}</span>
-        <p class="artist-bio">{{ artist.bio }}</p>
+      <div class="col-lg-8 ps-4">
+        <h1 class="artist-name fw-bold">{{ artist.name }}</h1>
+        <span class="artist-occupation">{{ artistJobTitle }}</span>
+        <p class="artist-bio">
+          <span v-if="artist.biography">{{ artist.biography }}</span>
+          <span v-if="!artist.biography" class="text-muted"
+            >Sin datos biográficos</span
+          >
+        </p>
+        <div class="divider my-4"></div>
         <div class="artist-albums">
-          <h3>Discografía</h3>
-          <Carousel :settings="settings" :breakpoints="breakpoints">
+          <h4 class="fw-bold mb-3">Discografía</h4>
+          <Carousel
+            :settings="carouselConfig.settings"
+            :breakpoints="carouselConfig.breakpoints"
+          >
             <Slide v-for="album in artist.albums" :key="album.id">
               <album-item :album="album"></album-item>
             </Slide>
@@ -63,14 +82,14 @@
             </template>
           </Carousel>
         </div>
-        <div class="artist-quotes">
-          <h3>Quotes</h3>
-          <div class="flex">
+        <div class="divider my-4"></div>
+        <div class="artist-quotes my-4">
+          <h4 class="fw-bold">Quotes</h4>
+          <div class="d-flex">
             <small
-              class="alert alert-no-data"
+              class="text-muted"
               v-if="!artist.quotes || !artist.quotes.length"
-              ><i class="fas fa-exclamation"> </i>No hay quotes para
-              mostrar</small
+              >No hay quotes para mostrar</small
             >
             <quote-item
               v-for="quote in artist.quotes"
@@ -79,14 +98,14 @@
             ></quote-item>
           </div>
         </div>
-        <div class="artist-articles">
-          <h3>Artículos</h3>
-          <div class="flex">
+        <div class="divider my-4"></div>
+        <div class="artist-articles my-4">
+          <h4 class="fw-bold">Artículos</h4>
+          <div class="d-flex">
             <small
-              class="alert alert-no-data"
+              class="text-muted"
               v-if="!artist.articles || !artist.articles.length"
-              ><i class="fas fa-exclamation"> </i>No hay artículos para
-              mostrar</small
+              >No hay artículos para mostrar</small
             >
             <article-item
               v-for="article in artist.articles"
@@ -97,11 +116,20 @@
         </div>
       </div>
     </section>
-    <div class="divider"></div>
+    <div class="divider my-4"></div>
     <section class="artist-related">
       <div class="flex">
-        <h3 class="flex-grow-1">Artistas Relacionados</h3>
-        <router-link to="/">Explorar Categoría</router-link>
+        <h4 class="flex-grow-1">Artistas Relacionados</h4>
+      </div>
+      <div class="d-flex flex-wrap align-items-center">
+        <span
+          style="border-radius: 30px; min-width: 100px"
+          class="me-2 bg-secondary px-2 py-1 text-center"
+          v-for="rel in artist.relatedArtists"
+          :key="rel"
+        >
+          {{ rel }}
+        </span>
       </div>
     </section>
   </div>
@@ -109,7 +137,7 @@
 
 <script>
 import { computed, ref } from '@vue/reactivity';
-import { fetchById } from '../data';
+import { fetch } from '../data';
 import { decodeBase64Image } from '../utils';
 
 import AppInput from '../components/input.vue';
@@ -117,9 +145,33 @@ import AlbumItem from '../components/album_item.vue';
 import QuoteItem from '../components/quote_item.vue';
 import ArticleItem from '../components/article_item.vue';
 
-import { capitalize } from '@vue/shared';
 import { Carousel, Navigation, Slide } from 'vue3-carousel';
-import { useFetchCache } from '../componsable/useApi';
+import 'vue3-carousel/dist/carousel.css';
+
+const carouselConfig = {
+  settings: {
+    itemsToShow: 1,
+    snapAlign: 'center'
+  },
+  breakpoints: {
+    576: {
+      itemsToShow: 1,
+      snapAlign: 'center'
+    },
+    768: {
+      itemsToShow: 1.5,
+      snapAlign: 'center'
+    },
+    992: {
+      itemsToShow: 2.1,
+      snapAlign: 'center'
+    },
+    1200: {
+      itemsToShow: 2.5,
+      snapAlign: 'center'
+    }
+  }
+};
 
 export default {
   props: ['id'],
@@ -134,57 +186,46 @@ export default {
   },
   data() {
     return {
-      settings: {
-        itemsToShow: 1,
-        snapAlign: 'center'
-      },
-      breakpoints: {
-        // 700px and up
-        700: {
-          itemsToShow: 2,
-          snapAlign: 'center'
-        },
-        1024: {
-          itemsToShow: 3
-        }
-      }
+      carouselConfig
     };
   },
-  async setup(props) {
+  async setup({ id }) {
     const artist = ref(null);
+    const error = ref(null);
+
     const artistImage = computed(() => {
       const fallbackImage = new URL(
         '../assets/images/default-image.jpg',
         import.meta.url
       );
-      return artist.value.image
-        ? decodeBase64Image(artist.value.image.data, artist.value.image.type)
+      return artist.value?.imageFile
+        ? decodeBase64Image(
+            artist.value.imageFile?.filedata,
+            artist.value.imageFile?.filetype
+          )
         : fallbackImage;
     });
 
-    const artistRoles = computed(() => {
-      return artist.value.roles && artist.value.roles.length
-        ? artist.value.roles.map((e) => capitalize(e)).join(', ')
-        : '';
+    const artistInst = computed(() => {
+      return artist.value?.instruments?.map(e => e.name);
     });
+    
+    const artistGenres = computed(() => {
+      return artist.value?.genres?.map(e => e.name)
+    })
 
-    const error = ref(null);
-
-    if (props.id) {
-      try {
-        const _artist = await useFetchCache('/artists/' + props.id);
-        artist.value = _artist.data.value;
-      } catch (e) {
-        error.value = e;
-      }
-    } else {
-      console.error('No id!');
+    try {
+      const data = await fetch(`/persons/${id}`);
+      artist.value = data;
+    } catch (e) {
+      this.$log.error(e);
     }
 
     return {
       artist,
       artistImage,
-      artistRoles,
+      artistInst,
+      artistGenres,
       error
     };
   }
@@ -193,77 +234,12 @@ export default {
 
 <style lang="scss" scoped>
 .artist-container {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding: 2rem;
-  position: relative;
-  flex: 1 0 auto;
-
-  .artist-related {
-    .flex {
-      align-items: center;
-    }
-  }
-
-  h3 {
-    margin-bottom: 0.5rem;
-  }
-
-  .artist-details {
-    display: flex;
-    &--right {
-      flex-grow: 1;
-      .artist-occupation {
-        color: var(--primary);
-      }
-      .artist-albums {
-        margin-top: 2rem;
-        .carousel {
-          padding-left: 2rem;
-          padding-right: 2rem;
-        }
-      }
-      .artist-quotes {
-        margin-top: 2rem;
-      }
-
-      .artist-articles {
-        margin-top: 2rem;
-      }
-    }
-    &--left {
-      display: flex;
-      flex-direction: column;
-      padding: 2rem;
-      .artist-image {
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        object-fit: cover;
-        object-position: center;
-      }
-      .artist-roles {
-        margin-top: 1rem;
-        color: var(--primary);
-      }
-      .divider {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-      }
-      small {
-        margin-bottom: 0.5rem;
-      }
-      .artist-social {
-        margin-top: 1rem;
-        display: inline-flex;
-        flex-wrap: wrap;
-        svg {
-          margin-right: 1rem;
-          margin-top: 0.5rem;
-        }
-      }
-    }
+  .artist-image {
+    object-fit: cover;
+    object-position: center;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
   }
 }
 </style>

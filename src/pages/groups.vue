@@ -1,6 +1,5 @@
 <template>
   <div class="groups-page">
-    <div class="divider"></div>
     <div class="group-list">
       <group-item
         v-for="item in groups"
@@ -13,7 +12,7 @@
 
 <script>
 import { ref } from '@vue/reactivity';
-import { fetchList } from '../data';
+import { fetch, fetchList } from '../data';
 
 import GroupItem from '../components/group_item.vue';
 import AppInput from '../components/input.vue';
@@ -21,18 +20,12 @@ import AppInput from '../components/input.vue';
 export default {
   components: {
     GroupItem,
-    AppInput,
-    Search
+    AppInput
   },
   async setup() {
     const groups = ref([]);
-    const fetchData = async () => {
-      const res = await fetchList('/groups');
-      if (res) {
-        groups.value = res;
-      }
-    };
-    await fetchData();
+    const res = await fetch('/groups');
+    groups.value = res;
     return {
       groups
     };
@@ -50,14 +43,14 @@ export default {
   padding: 2rem;
   position: relative;
   .group-list {
-	  padding: 2rem;
-	  display: flex;
-	  align-items: center;
-	  flex-wrap: wrap;
-	  justify-content: space-evenly;
-	  *{
-		  width: 25%;
-	  }
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    * {
+      width: 25%;
+    }
   }
 }
 </style>

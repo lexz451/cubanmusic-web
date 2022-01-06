@@ -5,19 +5,7 @@
     >
     <div class="search-results-content">
       <template v-for="item in results" :key="item.id + item.name">
-        <router-link :to="{ name: 'artist', params: { id: item.id } }" v-if="item.type == 'Person'" class="artist-item">
-          <img :src="item.image" />
-          <div class="artist-info">
-            <h3>{{ item.name }}</h3>
-            <span class="details">
-              {{ placeToString(item.data?.birth_place) }},
-              {{ item.data?.birth_date }} |
-              {{ placeToString(item.data?.death_place) }}
-              {{ item.data?.death_date }}
-            </span>
-            <small class="occupation">{{ item.data?.job_title }}</small>
-          </div>
-        </router-link>
+        <artist-item :fullWidth="true" :artist="item.data" v-if="item.type == 'info.cubanmusic.cubanmusicapi.model.Person'"></artist-item>
         <div v-if="item.type == 'Group'" class="group-item">
           <img :src="item.image" />
           <div class="group-info">
@@ -34,52 +22,43 @@
 </template>
 
 <script>
-import { computed } from 'vue-demi';
-import { useSearch } from '../componsable/useApi';
-
+import { ref } from 'vue-demi';
+import { useRoute } from 'vue-router';
 import ArtistItem from '../components/artist_item.vue';
 import { decodeBase64Image } from '../utils';
-import { useBase64 } from '@vueuse/core';
+import { fetch } from '../data';
 
 export default {
-  props: ['query'],
-  async setup({ query }) {
-    const { data, search } = useSearch();
+  props: [],
+  async setup() {
+    const query = ref('');
+    const error = ref(null);
+    const results = ref([]);
 
-    const getImage = (base64, type) => {
+    const { query: queryParams } = useRoute()
+    query.value = queryParams.query;
+
+    const getImage = (file) => {
       const fallbackImage = new URL(
         '../assets/images/default-image.jpg',
         import.meta.url
       );
-      return base64 ? decodeBase64Image(base64, type) : fallbackImage;
+      return file ? decodeBase64Image(file.filedata, file.filetype) : fallbackImage;
     };
 
-    const count = computed(() => data.value?.length);
+    try {
+      const data = await fetch(`/search?query=${encodeURIComponent(query.value)}`);
+      results.value = data;
+    } catch (e) {
+      console.error(e);
+      error.value = e;
+    }
 
-    const results = computed(
-      () =>
-        data.value?.map((item) => {
-          return {
-            type: item[0],
-            id: item[1],
-            name: item[2],
-            image: getImage(item[3], item[4]),
-            data: item[5] && item[5] !== 'NULL' ? JSON.parse(item[5]) : null
-          };
-        }) || []
-    );
-
-    const placeToString = (place) => {
-      const data = [];
-      if (place.city) data.push(place.city);
-      if (place.state) data.push(place.state);
-      if (place.country) data.push(place.country);
-      if (data.length) return data.join(', ');
-      return '-';
-    };
-
-    await search(query);
-    return { results, placeToString, count };
+    return {
+      query,
+      results,
+      getImage
+    }
   },
   components: {
     ArtistItem
@@ -117,7 +96,7 @@ export default {
       margin-top: 1rem;
       img {
         width: 200px;
-        height: 200px;
+        height: auto;
         border-radius: 50%;
         object-fit: cover;
         object-position: center;
