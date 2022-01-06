@@ -16,8 +16,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           cache: "yarn"
-        env:
-          API_URL: "https://api.cubanmusic.info/api/v1/public"  
       - name: Build
         run: yarn install && yarn build
       - name: Deploy

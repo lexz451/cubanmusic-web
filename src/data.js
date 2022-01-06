@@ -2,8 +2,10 @@ import axios from "axios";
 import { cacheAdapterEnhancer, retryAdapterEnhancer } from "axios-extensions";
 import { inject } from "vue";
 
+const API_URL = "https://api.cubanmusic.info/api/v1/public";
+
 const AxiosInstace = axios.create({
-  baseURL: process.env.API_URL,
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
   },
